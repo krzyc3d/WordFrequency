@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith({MockitoExtension.class})
 public class FrequencyWordServiceTest {
@@ -42,6 +43,19 @@ public class FrequencyWordServiceTest {
         MockHttpServletRequest request = createHttpRequestMockForFile("polishWord.txt");
         Map<String, Integer> responseMap = frequencyWordService.countWordsFrequencyInFile(request);
         assertEquals(1, responseMap.size());
+    }
+
+    @Test
+    void shouldCalculateTheSameWord() throws IOException {
+        MockHttpServletRequest request = createHttpRequestMockForFile("multilineSameWord.txt");
+        Map<String, Integer> responseMap = frequencyWordService.countWordsFrequencyInFile(request);
+        assertEquals(1, responseMap.size());
+    }
+
+    @Test
+    void shouldThrowException() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        assertThrows(NullPointerException.class, () ->  frequencyWordService.countWordsFrequencyInFile(request));
     }
 
     private MockHttpServletRequest createHttpRequestMockForFile(String file) throws IOException {
